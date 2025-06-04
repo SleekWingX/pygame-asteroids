@@ -6,6 +6,7 @@ from constants import *
 from player import Player
 from asteroid import Asteroid
 from asteroidfield import AsteroidField
+from circleshape import CircleShape
 
 def main():
     pygame.init()  # Initialize all imported pygame modules
@@ -35,6 +36,10 @@ def main():
                 return
         screen.fill("black")  # Fill the screen with black color
         updatables.update(dt)
+        for asteroid in asteroids:
+            if asteroid.collide(player):
+                print("Game Over!")
+                gameplay = False
         for drawable in drawables:
             drawable.draw(screen)  # Draw the drawable objects
         pygame.display.flip()
