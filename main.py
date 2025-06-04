@@ -4,6 +4,8 @@
 import pygame
 from constants import *
 from player import Player
+from asteroid import Asteroid
+from asteroidfield import AsteroidField
 
 def main():
     pygame.init()  # Initialize all imported pygame modules
@@ -11,23 +13,29 @@ def main():
     clock = pygame.time.Clock()  # Create a clock object to control the frame rate
     dt = 0
     gameplay = True
-    player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)  # Create a player object at the center of the screen
 
     print("Starting Asteroids!")
     print(f"Screen width: {SCREEN_WIDTH}")
     print(f"Screen height: {SCREEN_HEIGHT}")
 
-    updatable_group = pygame.sprite.Group(player)
-    drawable_group = pygame.sprite.Group(player)
-    Player.containers = (updatable_group, drawable_group)
+    updatables = pygame.sprite.Group()  # Group for objects that need to be updated
+    drawables = pygame.sprite.Group()
+    asteroids = pygame.sprite.Group()  # Group for asteroids, if needed later
+
+    Player.containers = (updatables, drawables)
+    Asteroid.containers = (asteroids, updatables, drawables)
+    AsteroidField.containers = (updatables)  # Set containers for asteroid field
+
+    player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)  # Create a player object at the center of the screen
+    asteroid = AsteroidField()  # Create an asteroid field object
 
     while gameplay:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
         screen.fill("black")  # Fill the screen with black color
-        updatable_group.update(dt)
-        for drawable in drawable_group:
+        updatables.update(dt)
+        for drawable in drawables:
             drawable.draw(screen)  # Draw the drawable objects
         pygame.display.flip()
         dt = clock.tick(60) / 1000.0
