@@ -17,13 +17,18 @@ def main():
     print(f"Screen width: {SCREEN_WIDTH}")
     print(f"Screen height: {SCREEN_HEIGHT}")
 
+    updatable_group = pygame.sprite.Group(player)
+    drawable_group = pygame.sprite.Group(player)
+    Player.containers = (updatable_group, drawable_group)
+
     while gameplay:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
         screen.fill("black")  # Fill the screen with black color
-        player.update(dt)
-        player.draw(screen)  # Draw the player
+        updatable_group.update(dt)
+        for drawable in drawable_group:
+            drawable.draw(screen)  # Draw the drawable objects
         pygame.display.flip()
         dt = clock.tick(60) / 1000.0
 
